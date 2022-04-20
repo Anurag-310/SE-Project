@@ -61,3 +61,17 @@
     z-index:-1;
     transition:width 300ms ease-in-out;
   }
+
+
+  .notice{
+    margin-top: 40%;
+    text-align: center;
+    
+
+  }
+.headinghover
+.headinghover:hover{
+  color: #F7E9D7;
+  size: 150%;
+  font-family: "Copperplate"
+}
