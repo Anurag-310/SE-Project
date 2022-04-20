@@ -1,57 +1,44 @@
-let poll = {
-    question:"jdjd?",//question
-    answers:[
-        "a","b","c","d"
-    ],//answers
-    pollCount:20,
-    answersWeight:[4, 4, 2, 10],
-    selectedAnswer:-1
-};
+var buttons = document.querySelectorAll(".choice button"),
+  tally = {
+    1: 0,
+    2: 0,
+    3: 0,
+    total: 0
+  };
 
-let pollDOM = {
-    question:document.querySelector(".poll .question"),
-    answers:document.querySelector(".poll .answers")
-};
+function vote(choice) {
+  tally[choice]++;
+  tally["total"]++;
+  console.log(tally);
+}
 
-pollDOM.question.innerText = poll.question;
-pollDOM.answers.innerHTML = poll.answers.map(function(answer,i){
-    return (
-    `
-        <div class="answer" onclick="markAnswer('${i}')">
-        ${answer}
-        <span class="percentage-bar"></span>
-        <span class="percentage-value"></span>
-        </div>
-    `
-    );
-    }).join("");;
+function barPercentage(node, tally) {
+  var choice = node.dataset.choice;
 
-    function markAnswer(i){
-        poll.selectedAnswer = +1;
-        try {
-            document.querySelector(".poll .answers .answer.selected").classList.remove("selected");
-        } catch(msg) {}
-        document.querySelectorAll(".poll .answers .answer")[+i].classList.add("selected");
-        showResults();
+  if (tally[choice]) return (tally[choice] / tally["total"]) * 100;
+  return 0;
+}
 
-    } 
-    function showResults(){
-        let answers =  document.querySelectorAll(".poll .answers .answer");
-        for(let i=0; i<answers.length;i++){
-            let percentage = 0;
-            if(i == poll.selectedAnswer){
-                percentage = Math.round(
-                    (poll.answersWeight[i]+1) * 100 /(poll.pollCount+1)
-                );
-            } else {
-                percentage =  Math.round(
-                    (poll.answersWeight[i]) * 100 / (poll.pollCount+1)
-                );
-            } 
+function renderBars() {
+  var bars = document.getElementsByClassName("bar");
 
-            answers[i].querySelector(".percentage-bar").style.width = percentage + "%";
-            answers[i].querySelector(".percentage-value").innerText = percentage + "%";
-            }
-        }
-         
-         
+  for (var i = 0; i < bars.length; i++) {
+    var percentage = barPercentage(bars[i], tally);
+    console.log(percentage);
+    bars[i].style.height = percentage.toString() + "%";
+  }
+}
+
+function setup() {
+  // Set up event listeners
+  for (var i = 0; i < buttons.length; i++) {
+    buttons[i].addEventListener("click", function (e) {
+      vote(e.target.dataset["choice"]);
+      renderBars();
+    });
+  }
+
+  renderBars();
+}
+
+setup();
